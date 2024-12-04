@@ -11,7 +11,10 @@ import { calculatePercentage, fillMissingDays } from "@/lib/utils";
 
 const app = new Hono().get(
   "/",
-  clerkMiddleware(),
+  clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
   zValidator(
     "query",
     z.object({

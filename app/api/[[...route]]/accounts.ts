@@ -9,7 +9,10 @@ import { db } from "@/db/drizzle";
 import { accounts, insertAccountSchema } from "@/db/schema";
 
 const app = new Hono()
-  .get("/", clerkMiddleware(), async (c) => {
+  .get("/", clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }), async (c) => {
     const auth = getAuth(c);
     if (!auth?.userId) {
       return c.json({ error: "Unauthorized" }, 401);
@@ -31,7 +34,10 @@ const app = new Hono()
         id: z.string().optional(),
       })
     ),
-    clerkMiddleware(),
+    clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
     async (c) => {
       const auth = getAuth(c);
       const { id } = c.req.valid("param");
@@ -56,7 +62,10 @@ const app = new Hono()
   )
   .post(
     "/",
-    clerkMiddleware(),
+    clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
     zValidator(
       "json",
       insertAccountSchema.pick({
@@ -82,7 +91,10 @@ const app = new Hono()
   )
   .post(
     "/bulk-delete",
-    clerkMiddleware(),
+    clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
     zValidator(
       "json",
       z.object({
@@ -111,7 +123,10 @@ const app = new Hono()
   )
   .patch(
     "/:id",
-    clerkMiddleware(),
+    clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
     zValidator(
       "param",
       z.object({
@@ -147,7 +162,10 @@ const app = new Hono()
   )
   .delete(
     "/:id",
-    clerkMiddleware(),
+    clerkMiddleware({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    secretKey: process.env.CLERK_SECRET_KEY,
+  }),
     zValidator(
       "param",
       z.object({
